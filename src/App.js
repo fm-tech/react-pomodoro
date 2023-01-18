@@ -25,7 +25,7 @@ function App() {
   const [ onBreak, setOnBreak ] = useState(false)
   const [ workInterval, setWorkInteval ] = useState(0)
   const [ breakInterval, setBreakInterval ] = useState(0)
-
+  const [ bgColor, setBgColor] = useState('#f7dcda')
 
   // useEffect 
   useEffect(() => {
@@ -44,18 +44,25 @@ function App() {
         if(timeMin === 0 && timeSec === 0){
           setTimeSec(0)
           setTimeMin(0)
-          clockLoop.stop()
+          clockLoop.pause()
           bellSfx.play()
           // Keep track of intervals
           if(!onBreak){
             setWorkInteval((workInterval) => workInterval + 1)
-            setTimeMin(5)
+            setBgColor('#daeaf7')
+            
+            if(workInterval > 0 && workInterval % 3 === 0){
+              setTimeMin(25)
+            } else {
+              setTimeMin(5)
+            }
             setOnBreak(true)
           }
           if (onBreak) {
             setBreakInterval((breakInterval) => breakInterval + 1)
+            setBgColor('#f7dcda')
             setTimeMin(25)
-            clockLoop.start()
+            clockLoop.play()
             setOnBreak(false)
           }
          
@@ -99,7 +106,8 @@ function App() {
 
   // Rendered JSX
   return (
-    <div className='container'>
+    <div style={{ height: '100vh', background: bgColor}}>
+      <div className='container' >
       <div className="d-flex align-items-center flex-column">
         <div className='Lead'>
           <h2 className='display-2'>
@@ -122,6 +130,8 @@ function App() {
         <Button variant='danger' size='lg' onClick={pauseTimer}>Pause</Button>
       </div>
     </div>
+    </div>
+    
 
   );
 }
